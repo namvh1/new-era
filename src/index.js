@@ -6,14 +6,15 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import Course from "./Components/Course";
 import Profile from "./Components/Profile";
+import LeaderBoard from "./Components/LeaderBoard";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <NextUIProvider>
-      <div className="bg-gray-900 p-4">
+      <div className=" p-4">
         <div>
-          {/*nav component*/}
+          {/*<NavbarCustom/>*/}
         </div>
         <div>
           <BrowserRouter>
@@ -23,6 +24,9 @@ root.render(
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route path="/leaderboard">
+                <LeaderBoard />
               </Route>
             </Switch>
           </BrowserRouter>

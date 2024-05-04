@@ -16,7 +16,11 @@ import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
 import {Web3} from "web3";
 import { useParams } from 'react-router-dom';
 import courses from '../../courses.json'
-
+function uuidv4() {
+    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+        (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+    );
+}
 const steps=[
     {step:1,
     desc: 'Courses'},
@@ -50,9 +54,18 @@ export default function CourseDetail(){
     const mint=async()=>{
           const account=await window.coin98.provider
               .request({ method: "eth_accounts" })
-
-          const balance = await NEContractInstance.methods.safeMint(account[0]).call();
-          console.log(balance)
+        let tokenId=JSON.parse(localStorage.getItem('tokenID')|| 0)
+        tokenId++
+        const metadata={
+              image: 'https://i.guim.co.uk/img/media/b8a75934f827bdaf02a3814d1669c8da19886881/0_727_3500_2100/master/3500.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=1ad9e12c908d182c891b03abc19988f4',
+            tokenId:tokenId,
+            name: stCourse.name
+        }
+          const mint = await NEContractInstance.methods.safeMint(account[0],tokenId,'').call();
+          const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || []
+        listMetadata.push(metadata)
+          localStorage.setItem('listMetadata',JSON.stringify(listMetadata))
+          console.log(mint)
     }
     const handleStep=()=>{
         if(step===3){

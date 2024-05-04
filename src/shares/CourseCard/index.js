@@ -51,9 +51,9 @@ export default function CourseCard(props){
                 <p className="text-tiny">{item.desc}</p>
             </div>
 
-            <Button className="text-tiny" color="primary" radius="full" size="sm" onClick={onOpen}>
+            {!props.isBuyed && <Button className="text-tiny" color="primary" radius="full" size="sm" onClick={onOpen}>
                 Buy
-            </Button>
+            </Button>}
             {/*<Link href={`/courses/${item.slug}`} >*/}
             {/*    <Button className="text-tiny" color="primary" radius="full" size="sm" >*/}
             {/*        Buy*/}
@@ -78,10 +78,10 @@ export default function CourseCard(props){
                             </div>
                         </ModalBody>
                         <ModalFooter>
-
                             <Button color="primary" onPress={onClose} >
                                 Buy
                             </Button>
+
                         </ModalFooter>
                     </>
                 )}

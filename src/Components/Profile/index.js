@@ -1,5 +1,8 @@
 import { Button } from "@nextui-org/button";
 import {Avatar, Progress, Image, Tabs, Tab, Card, CardHeader, CardFooter} from "@nextui-org/react";
+import {useEffect, useState} from "react";
+import courses from "../../courses.json";
+import CourseCard from "../../shares/CourseCard";
 const colors = [
   "default",
   "primary",
@@ -8,38 +11,53 @@ const colors = [
   "warning",
   "danger"
 ];
+const total=[
+  {
+    name: 'Courses',
+    value: 0,
+    icon: <Image src={'https://cdn-icons-png.flaticon.com/512/4762/4762311.png'} width={50}/>
+  },
+  {
+    name: 'Points',
+    value: 0,
+    icon: <Image src={'https://png.pngtree.com/element_our/20200702/ourmid/pngtree-cartoon-gold-coin-vector-download-image_2286360.jpg'} width={50}/>
+
+  }
+]
 function Profile() {
+  const [account,setAccount]=useState('')
+  useEffect(()=>{
+    fetchAccount()
+  },[])
+  const fetchAccount=async()=>{
+    const account=await window.coin98.provider
+        .request({ method: "eth_accounts" })
+    setAccount(account[0])
+  }
   return <div className={'grid grid-cols-3 gap-4 text-black'}>
     <div className={'col-span-1 flex flex-col gap-2'}>
       <div className={'flex items-center justify-between'}>
-        <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" className="w-20 h-20 text-large" />
-        <Button color="primary">
-          Button
-        </Button>
+        <Avatar src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e2b28077-02b5-4e0f-8303-37e2672ea874/d5a1hdb-d15d5151-5a7b-4407-9eaa-99aa77863802.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2UyYjI4MDc3LTAyYjUtNGUwZi04MzAzLTM3ZTI2NzJlYTg3NFwvZDVhMWhkYi1kMTVkNTE1MS01YTdiLTQ0MDctOWVhYS05OWFhNzc4NjM4MDIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ITLY1myWdL4iAy1wu4qYRLCGPOEbVs4rxrlXt5uR3zg" className="w-20 h-20 text-large" />
 
       </div>
 
       <Progress aria-label="Loading..." value={60} className="max-w-md"/>
       <b>
-        0x7FF8...f9fd
+        {account}
       </b>
       <div >
           Joined May 2024
         </div>
       <div className={'grid grid-cols-2 gap-4 '}>
         {
-          [1,2,3,4].map((item,key)=><div key={key} className={'col-span-1 flex items-center gap-2 bg-cyan-50 p-4 py-2 rounded'}>
-            <Image
-                width={50}
-                alt="NextUI hero Image"
-                src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
-            />
+          total.map((item,key)=><div key={key} className={'col-span-1 flex items-center gap-2 bg-cyan-50 p-4 py-2 rounded'}>
+            {item.icon}
             <div>
               <div>
-                Quests
+                {item.name}
               </div>
               <div>
-                <b>0</b>
+                <b>{item.value}</b>
               </div>
             </div>
           </div>)
@@ -47,9 +65,12 @@ function Profile() {
         
         
       </div>
-      <Button color="primary">
-        0x7FF8...f9fd
-      </Button>
+      <a href={`https://etherscan.io/address/${account}`} target={'_blank'}>
+        <Button color="primary" >
+          {account}
+        </Button>
+      </a>
+
       <b>
         Achievements
       </b>
@@ -78,33 +99,12 @@ function Profile() {
 
       </Tabs>
       <div className={'grid grid-cols-3 gap-4 mt-4 text-white'}>
-        {
-          [0,1,2,3,4,5,6,7].map((item,key)=>(<Card key={key} isFooterBlurred className="w-full h-[300px] col-span-1">
-            <CardHeader className="absolute z-10 top-1 flex-col items-start">
-              <Image
-                  src="https://i.pinimg.com/originals/dd/aa/45/ddaa452e0a3acaf6c79f6aa2fd69cebe.png"
-                  alt="NextUI Album Cover"
-                  className="rounded-full w-[50px] h-[50px]"
-              />
-              <h4 className=" font-medium text-2xl">Starship</h4>
-            </CardHeader>
-            <Image
-                removeWrapper
-                alt="Card example background"
-                className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-                src="https://i.ytimg.com/vi/zkVWqHUh0C4/maxresdefault.jpg"
-            />
-            <CardFooter className="absolute bg-cyan-50/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-              <div>
-                <p className=" text-tiny">Available soon.</p>
-                <p className="text-tiny">Get notified.</p>
-              </div>
-              <Button className="text-tiny" color="primary" radius="full" size="sm">
-                Notify Me
-              </Button>
-            </CardFooter>
-          </Card>))
-        }
+        {courses
+            .map((item, key) => (
+                <div className={"col-span-1"}>
+                  <CourseCard key={key} item={item} isBuyed={true}/>
+                </div>
+            ))}
 
       </div>
     </div>

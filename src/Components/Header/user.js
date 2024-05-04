@@ -18,7 +18,7 @@ function User() {
 
   // Get balance
   const getBalance = async (address) => {
-    const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
+    const web3 = new Web3(new Web3.providers.HttpProvider(RPC));
     const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
 
     const balance = await NEContractInstance.methods.balanceOf(address).call();
@@ -29,7 +29,7 @@ function User() {
 
   const handleConnectWallet = () => {
     if (wallet?.isConnected) {
-      window.coin98.provider.disconnect();
+      window.coin98.provider?.disconnect();
       localStorage?.setItem(
         LOCAL_WALLET_KEY,
         JSON.stringify({
@@ -44,7 +44,7 @@ function User() {
       setBalance(0);
     } else {
       window.coin98.provider
-        .request({ method: "eth_accounts" })
+        ?.request({ method: "eth_accounts" })
         .then((accounts) => {
           if (accounts[0]) {
             localStorage?.setItem(

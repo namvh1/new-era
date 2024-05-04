@@ -1,6 +1,6 @@
 import { Image } from "@nextui-org/image";
 import User from "./user";
-import {Link} from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
 function Profile() {
   return (
@@ -14,6 +14,10 @@ function Profile() {
             className="rounded-none"
           />
         </Link>
+      </div>
+      <div className="flex gap-3">
+        <Link className="cursor-pointer" href="/">Home</Link>
+        <Link className="cursor-pointer" href="/leaderboard">Leader Board</Link>
       </div>
       <User />
     </div>

@@ -1,15 +1,16 @@
-import { Button } from "@nextui-org/button";
+import { Button, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { NEAbi } from "../../blockchain/abi/NewEraERC20";
 import { LOCAL_WALLET_KEY, RPC, TOKEN_CONTRACT } from "../../common/constans";
+import BuyToken from "./buyToken";
 
 function User() {
   const [wallet, setWallet] = useState({
     address: "",
     isConnected: false,
   });
-
+  const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
   const [balance, setBalance] = useState(0);
 
   const walletConnect = localStorage.getItem(LOCAL_WALLET_KEY)
@@ -29,7 +30,7 @@ function User() {
 
   const handleConnectWallet = () => {
     if (wallet?.isConnected) {
-      window.coin98.provider?.disconnect();
+      window.ethereum.disconnect();
       localStorage?.setItem(
         LOCAL_WALLET_KEY,
         JSON.stringify({
@@ -43,26 +44,24 @@ function User() {
       });
       setBalance(0);
     } else {
-      window.coin98.provider
-        ?.request({ method: "eth_accounts" })
-        .then((accounts) => {
-          if (accounts[0]) {
-            localStorage?.setItem(
-              LOCAL_WALLET_KEY,
-              JSON.stringify({
-                isConnected: true,
-                address: accounts[0],
-              })
-            );
-            setWallet({
+      window.ethereum.request({ method: "eth_accounts" }).then((accounts) => {
+        if (accounts[0]) {
+          localStorage?.setItem(
+            LOCAL_WALLET_KEY,
+            JSON.stringify({
               isConnected: true,
               address: accounts[0],
-            });
-            getBalance(accounts[0]);
-          } else {
-            console.log("Wallet not found");
-          }
-        });
+            })
+          );
+          setWallet({
+            isConnected: true,
+            address: accounts[0],
+          });
+          getBalance(accounts[0]);
+        } else {
+          console.log("Wallet not found");
+        }
+      });
     }
   };
 
@@ -81,6 +80,18 @@ function User() {
       <Button onClick={handleConnectWallet} color="primary">
         {wallet?.isConnected ? "Disconnect" : "Connect"}
       </Button>
+
+      <Button onClick={onOpen} color="primary" className="ml-4">
+        Buy NEra
+      </Button>
+
+      <BuyToken
+        wallet={wallet}
+        setBalance={setBalance}
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 }

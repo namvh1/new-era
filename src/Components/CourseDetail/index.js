@@ -1,31 +1,25 @@
+import { Button } from "@nextui-org/button";
 import {
-  Avatar,
   Chip,
+  Image,
   Listbox,
   ListboxItem,
-  Image,
-  useDisclosure,
   Modal,
-  ModalContent,
-  ModalHeader,
   ModalBody,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
+  Radio,
+  RadioGroup,
+  useDisclosure,
 } from "@nextui-org/react";
-import { icon } from "../../icon";
-import { Button } from "@nextui-org/button";
 import { useEffect, useState } from "react";
-import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
-import { Web3 } from "web3";
 import { useParams } from "react-router-dom";
+import { Web3 } from "web3";
+import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
 import courses from "../../courses.json";
-function uuidv4() {
-  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
-    (
-      +c ^
-      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
-    ).toString(16)
-  );
-}
+import { icon } from "../../icon";
+
 const steps = [
   { step: 1, desc: "Courses" },
   {
@@ -49,7 +43,6 @@ const Step1 = (props) => {
       className={"w-full h-[560px]"}
       src={props.video}
       title="YouTube video player"
-      frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       referrerPolicy="strict-origin-when-cross-origin"
       allowFullScreen
@@ -84,28 +77,36 @@ export default function CourseDetail() {
     const mint = await NEContractInstance.methods
       .safeMint(accounts[0], tokenId, uri)
       .encodeABI();
-    await window.ethereum.request({
-      method: "eth_sendTransaction",
-      params: [
-        {
-          type: 0,
-          to: "0x6A70840B01299062C3fa2886eCD11aCBB42dccab",
-          from: accounts[0],
-          data: mint,
-        },
-      ],
-    });
+    await window.ethereum
+      .request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            type: 0,
+            to: "0x6A70840B01299062C3fa2886eCD11aCBB42dccab",
+            from: accounts[0],
+            data: mint,
+          },
+        ],
+      })
+      .then(() => {
+        const listMetadata =
+          JSON.parse(localStorage.getItem("listMetadata")) || {};
+        listMetadata[uri] = metadata;
 
-    const listMetadata = JSON.parse(localStorage.getItem("listMetadata")) || {};
-    listMetadata[uri] = metadata;
+        const walletItem = JSON.parse(
+          localStorage.getItem("wallet") || JSON.stringify({})
+        );
+        walletItem[accounts[0]] = {
+          ...walletItem[accounts[0]],
+          nfts: [...walletItem[accounts[0]].nfts, tokenId],
+        };
+        localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
+        localStorage.setItem("tokenId", JSON.stringify(tokenId));
+        localStorage.setItem("wallet", JSON.stringify(walletItem));
+        setDisabled(true)
 
-    const walletItem=JSON.parse(localStorage.getItem('wallet') || JSON.stringify({}))
-    walletItem[accounts[0]]={...walletItem[accounts[0]],nfts: [...walletItem[accounts[0]].nfts, tokenId]  }
-    localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
-    localStorage.setItem("tokenId", JSON.stringify(tokenId));
-    localStorage.setItem("wallet", JSON.stringify(walletItem));
-    setDisabled(true)
-
+      });
   };
   const handleStep = () => {
     if (step === 3) {
@@ -165,18 +166,25 @@ export default function CourseDetail() {
           {step === 1 && (
             <Step1 video={stCourse.videos && stCourse.videos[0]} />
           )}
-          {step === 2 && <div>1+1=2</div>}
+          {step === 2 && (
+            <RadioGroup label="Select your favorite token">
+              <Radio value="btc">BTC</Radio>
+              <Radio value="eth">ETH</Radio>
+              <Radio value="nera">NEra</Radio>
+              <Radio value="all">All</Radio>
+            </RadioGroup>
+          )}
           {step === 3 && (
-              <div>
-                <h1 className={'text-2xl text-center'}>Congratulations</h1>
-            <div className={"flex items-center justify-center mt-4"}>
-              <Image
-                width={400}
-                alt="NextUI hero Image"
-                src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTEwL2ZyZWVpbWFnZXNjb21wYW55X3Bob3RvX29mX2FfZ29sZF9jb2luc19pbnNpZGVfYV90cmVhc3VyZV9jaGVzdF9iMzNmYmMzYS0zZWZkLTRjZmEtOGEyMi0yOWFjZDkyMDFlMmFfMS5wbmc.png"
-              />
-            </div>
+            <div>
+              <h1 className={"text-2xl text-center"}>Congratulations</h1>
+              <div className={"flex items-center justify-center mt-4"}>
+                <Image
+                  width={400}
+                  alt="NextUI hero Image"
+                  src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTEwL2ZyZWVpbWFnZXNjb21wYW55X3Bob3RvX29mX2FfZ29sZF9jb2luc19pbnNpZGVfYV90cmVhc3VyZV9jaGVzdF9iMzNmYmMzYS0zZWZkLTRjZmEtOGEyMi0yOWFjZDkyMDFlMmFfMS5wbmc.png"
+                />
               </div>
+            </div>
           )}
           <div className={"flex items-center justify-center mt-4"}>
             <Button color={"primary"} onClick={handleStep} isDisabled={isDisabled}>

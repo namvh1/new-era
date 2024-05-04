@@ -95,7 +95,7 @@ function User() {
         {wallet?.isConnected ? "Disconnect" : "Connect"}
       </Button>
 
-      <Button onClick={onOpen} color="primary" className="ml-4">
+      <Button onClick={onOpen} color="success" className="ml-4">
         Buy NEra
       </Button>
 

@@ -4,7 +4,7 @@ import User from "./user";
 
 function Profile() {
   return (
-    <div className="fixed top-0 left-0 w-full z-10 p-4 bg-background shadow flex items-center justify-between w-full">
+    <div className="fixed top-0 left-0 w-full z-50 p-4 bg-background shadow flex items-center justify-between w-full">
       <div>
         <Link href="/">
           <Image

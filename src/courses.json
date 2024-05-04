@@ -1,0 +1,24 @@
+
+[
+  {
+    "name": "ethereum",
+    "desc": "desc",
+    "price": 1000,
+    "image": "https://blockchaintrainingalliance.com/cdn/shop/products/OD-eth_2x_0064586e-65da-4f4b-9363-8f32a6bf7562_1800x.png?v=1682499499",
+    "videos": [
+      "https://www.youtube.com/embed/Yl95vDqU5PE?si=grr160PZTmZmOLT-"
+    ],
+    "slug": "ethereum"
+  },
+  {
+    "name": "solana",
+    "desc": "desc",
+    "price": 1000,
+    "image": "https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/362041685/original/c95667efd40b178c0bc91f1066efc6f02e1d891e/fork-solana-token-or-spl-token-on-solana-blockchain.jpg",
+    "videos": [
+      "https://www.youtube.com/embed/Yl95vDqU5PE?si=grr160PZTmZmOLT-"
+    ],
+    "slug": "solana"
+
+  }
+]

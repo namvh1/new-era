@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/button";
 import { Avatar, Image, Progress } from "@nextui-org/react";
 import CourseCard from "../../shares/CourseCard";
-
+import courses from '../../courses.json'
 const CardsWrap = (props) => {
   return (
     <div className={"grid grid-cols-3 gap-2"}>
@@ -23,11 +23,10 @@ export default function Course() {
       <div className={"col-span-10"}>
         <b>Courses</b>
         <div className={"grid grid-cols-4 gap-4"}>
-          {Array(10)
-            .fill("")
+          {courses
             .map((item, key) => (
               <div className={"col-span-1"}>
-                <CourseCard key={key} />
+                <CourseCard key={key} item={item}/>
               </div>
             ))}
         </div>

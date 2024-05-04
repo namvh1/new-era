@@ -28,7 +28,7 @@ root.render(
             <Route path="/leaderboard">
               <LeaderBoard />
             </Route>
-            <Route path="/course/:slug">
+            <Route path="/courses/:slug">
               <CourseDetail />
             </Route>
           </Switch>

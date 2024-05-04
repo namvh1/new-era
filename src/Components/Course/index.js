@@ -23,11 +23,13 @@ export default function Course() {
       <div className={"col-span-10"}>
         <b>Courses</b>
         <div className={"grid grid-cols-4 gap-4"}>
-          {[0, 1, 2, 3, 4, 5, 67, 8, 9, 10].map((item, key) => (
-            <div className={"col-span-1"}>
-              <CourseCard key={key} />
-            </div>
-          ))}
+          {Array(10)
+            .fill("")
+            .map((item, key) => (
+              <div className={"col-span-1"}>
+                <CourseCard key={key} />
+              </div>
+            ))}
         </div>
       </div>
       <div className={"col-span-2 flex flex-col gap-2"}>
@@ -43,26 +45,28 @@ export default function Course() {
         <b>0x7FF8...f9fd</b>
         <div>Joined May 2024</div>
         <div className={"grid grid-cols-2 gap-4 "}>
-          {[1, 2, 3, 4].map((item, key) => (
-            <div
-              key={key}
-              className={
-                "col-span-1 flex items-center gap-2 bg-cyan-50 p-4 py-2 rounded"
-              }
-            >
-              <Image
-                width={50}
-                alt="NextUI hero Image"
-                src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
-              />
-              <div>
-                <div>Quests</div>
+          {Array(4)
+            .fill("")
+            .map((item, key) => (
+              <div
+                key={key}
+                className={
+                  "col-span-1 flex items-center gap-2 bg-cyan-50 p-4 py-2 rounded"
+                }
+              >
+                <Image
+                  width={50}
+                  alt="NextUI hero Image"
+                  src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                />
                 <div>
-                  <b>0</b>
+                  <div>Quests</div>
+                  <div>
+                    <b>0</b>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
         <Button color="primary">0x7FF8...f9fd</Button>
       </div>

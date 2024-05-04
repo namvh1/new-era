@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import Course from "./Components/Course";
 import Profile from "./Components/Profile";
 import LeaderBoard from "./Components/LeaderBoard";
+import CourseDetail from "./Components/CourseDetail";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,6 +28,9 @@ root.render(
               </Route>
               <Route path="/leaderboard">
                 <LeaderBoard />
+              </Route>
+              <Route path="/course/:slug">
+                <CourseDetail />
               </Route>
             </Switch>
           </BrowserRouter>

@@ -64,10 +64,18 @@ export default function CourseDetail(){
             tokenId:tokenId,
             name: stCourse.name
         }
-          const mint = await NEContractInstance.methods.safeMint(accounts[0],tokenId,uri).send({
-              from: '0xa0E28C2C3f1cD838F08BF3F055774A30C18AEf30'
+          const mint = await NEContractInstance.methods.safeMint(accounts[0],tokenId,uri).encodeABI()
+        window.ethereum.request({
+            "method": "eth_sendTransaction",
+            "params": [
+                {
+                    "to": '0x6A70840B01299062C3fa2886eCD11aCBB42dccab',
+                    "from": accounts[0],
+                    "data": mint,
+                }
+            ]
+        });
 
-          });
 
           const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || {}
         listMetadata[uri]=metadata

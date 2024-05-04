@@ -58,7 +58,7 @@ export default function CourseDetail(){
     const mint=async()=>{
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts",});
         let tokenId=JSON.parse(localStorage.getItem('tokenID')|| 0)
-        let uri=`https://abc.xyz/collection/acount${tokenId}`
+        let uri=`https://abc.xyz/collection/${tokenId}`
         tokenId++
 
         const metadata={
@@ -67,7 +67,7 @@ export default function CourseDetail(){
             name: stCourse.name
         }
           const mint = await NEContractInstance.methods.safeMint(accounts[0],tokenId,uri).encodeABI()
-        window.ethereum.request({
+        await window.ethereum.request({
             "method": "eth_sendTransaction",
             "params": [
                 {
@@ -91,7 +91,6 @@ export default function CourseDetail(){
         }
         setStep(step+1)
     }
-    setStep(step + 1);
   return (
     <div>
       <div className={"p-16 grid grid-cols-3 gap-4"}>

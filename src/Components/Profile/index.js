@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/button";
-import {Avatar, Progress, Image, Tabs, Tab, Card, CardHeader, CardFooter} from "@nextui-org/react";
+import {Avatar, Progress, Image, Tabs, Tab, Card, CardHeader, CardFooter, Link} from "@nextui-org/react";
 import {useEffect, useState} from "react";
 import courses from "../../courses.json";
 import CourseCard from "../../shares/CourseCard";
@@ -26,14 +26,23 @@ const total=[
 ]
 function Profile() {
   const [account,setAccount]=useState('')
+  const [stCourses,setStCourses]=useState([])
   useEffect(()=>{
     fetchAccount()
   },[])
   const fetchAccount=async()=>{
-    const account=await window.coin98.provider
-        .request({ method: "eth_accounts" })
+    const account=await window.ethereum.request({ method: "eth_accounts" })
+    const coursesItem=JSON.parse(localStorage.getItem('courses') || JSON.stringify({}))
+    let list=[]
+    coursesItem[account[0]].forEach(itemm=>{
+      if(courses.find(item=>item.slug===itemm.courseId )){
+        list.push(courses.find(item=>item.slug===itemm.courseId ))
+      }
+    })
+    setStCourses(list)
     setAccount(account[0])
   }
+  console.log(stCourses)
   return <div className={'grid grid-cols-3 gap-4 text-black'}>
     <div className={'col-span-1 flex flex-col gap-2'}>
       <div className={'flex items-center justify-between'}>
@@ -92,17 +101,17 @@ function Profile() {
     </div>
     <div className={'col-span-2'}>
       <Tabs  color={'primary'} aria-label="Tabs colors" radius="full">
-        <Tab key="photos" title="Quests Completed"/>
-        <Tab key="music" title="Favorites"/>
-        <Tab key="videos" title="NFTs"/>
-        <Tab key="videos" title="CUBEs"/>
-
+        <Tab key="photos" title="My Courses"/>
+        <Tab key="music" title="Completed"/>
       </Tabs>
       <div className={'grid grid-cols-3 gap-4 mt-4 text-white'}>
-        {courses
+        {stCourses
             .map((item, key) => (
                 <div className={"col-span-1"}>
-                  <CourseCard key={key} item={item} isBuyed={true}/>
+                  <Link href={`/courses/${item.slug}`}>
+                    <CourseCard key={key} item={item} isBuyed={true}/>
+
+                  </Link>
                 </div>
             ))}
 

@@ -1,6 +1,5 @@
 import { Button } from "@nextui-org/button";
-import { Avatar, Image, Progress } from "@nextui-org/react";
-import { Link } from "react-router-dom";
+import {Avatar, Image, Link, Progress} from "@nextui-org/react";
 import courses from "../../courses.json";
 import CourseCard from "../../shares/CourseCard";
 
@@ -34,7 +33,7 @@ export default function Course() {
       </div>
       <div className={"col-span-2 flex flex-col gap-2"}>
         <div className={"flex items-center justify-between"}>
-          <Link to="/profile">
+          <Link href="/profile">
             <Avatar
               src="https://i.pravatar.cc/150?u=a04258114e29026708c"
               className="w-20 h-20 text-large"

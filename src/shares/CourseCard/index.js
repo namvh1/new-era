@@ -39,21 +39,46 @@ export default function CourseCard(props){
   };
     const buy=async()=>{
         const accounts = await window.ethereum.request({ method: "eth_requestAccounts",});
+        // const data = await NEContractInstance.methods
+        //     .transfer(accounts[0], web3.utils.toWei(item.price, "ether"))
+        //     .encodeABI();
+        // window.ethereum.request({
+        //     "method": "eth_sendTransaction",
+        //     "params": [
+        //         {
+        //             "to": TOKEN_CONTRACT,
+        //             "from": accounts[0],
+        //             "data": data,
+        //         }
+        //     ]
+        // });
+        //
 
-        const data = await NEContractInstance.methods
-            .transfer(accounts[0], web3.utils.toWei(item.price, "ether"))
-            .encodeABI();
-        window.ethereum.request({
-            "method": "eth_sendTransaction",
-            "params": [
-                {
-                    "to": TOKEN_CONTRACT,
-                    "from": accounts[0],
-                    "data": data,
-                }
-            ]
-        });
+        const walletItem=localStorage.getItem('wallet') || {}
+        const parse=JSON.parse(typeof(walletItem) === 'string' ? walletItem : JSON.stringify(walletItem))
+        parse[accounts[0]]= {
+            coin: parse[accounts[0]]? parse[accounts[0]].coin - item.price : item.price
+        }
+        localStorage.setItem('wallet',JSON.stringify(parse))
 
+        const courses=localStorage.getItem('courses') || {}
+        const coursesParse=JSON.parse(typeof(courses) === 'string' ? courses : JSON.stringify(courses))
+        if(coursesParse[accounts[0]]){
+            const course=  coursesParse[accounts[0]].find(itemm=>itemm.courseId===item.slug)
+            if(!course){
+                coursesParse[accounts[0]].push({
+                    courseId: item.slug,
+                })
+            }
+
+        }
+        else{
+            coursesParse[accounts[0]]=[{
+                courseId: item.slug
+            }]
+        }
+
+        localStorage.setItem('courses',JSON.stringify(coursesParse))
     }
   return (
     <Card isFooterBlurred className="w-full h-[200px] col-span-1">
@@ -94,7 +119,9 @@ export default function CourseCard(props){
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={buy} disabled={balance<item.price}>
+                <Button color="primary" onPress={buy}
+                        // disabled={balance<item.price}
+                >
                   Buy
                 </Button>
               </ModalFooter>

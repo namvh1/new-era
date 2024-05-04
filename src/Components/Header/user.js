@@ -1,7 +1,7 @@
 import { Button, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import { NEAbi } from "../../blockchain/abi/NewEraERC20";
+import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import { LOCAL_WALLET_KEY, RPC, TOKEN_CONTRACT } from "../../common/constans";
 import BuyToken from "./buyToken";
 

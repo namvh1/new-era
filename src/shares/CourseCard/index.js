@@ -13,7 +13,7 @@ import {Button} from "@nextui-org/button";
 import {Redirect, useHistory} from "react-router-dom";
 import Web3 from "web3";
 import {RPC, TOKEN_CONTRACT} from "../../common/constans";
-import {NEAbi} from "../../blockchain/abi/NewEraERC20";
+import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import {useEffect, useState} from "react";
 
 export default function CourseCard(props){

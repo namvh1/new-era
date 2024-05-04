@@ -11,30 +11,32 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
-import {icon} from "../../icon";
-import {Button} from "@nextui-org/button";
-import {useEffect, useState} from "react";
+import { icon } from "../../icon";
+import { Button } from "@nextui-org/button";
+import { useEffect, useState } from "react";
 import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
-import {Web3} from "web3";
-import { useParams } from 'react-router-dom';
-import courses from '../../courses.json'
+import { Web3 } from "web3";
+import { useParams } from "react-router-dom";
+import courses from "../../courses.json";
 function uuidv4() {
-    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-        (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-    );
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+    (
+      +c ^
+      (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))
+    ).toString(16)
+  );
 }
-const steps=[
-    {step:1,
-    desc: 'Courses'},
-    {
-        step: 2,
-        desc: 'Practices'
-    },
-    {
-        step:3,
-        desc: 'Mint NFT'
-    }
-]
+const steps = [
+  { step: 1, desc: "Courses" },
+  {
+    step: 2,
+    desc: "Practices",
+  },
+  {
+    step: 3,
+    desc: "Mint NFT",
+  },
+];
 const rpc = "https://rpc.sepolia.org";
 const web3=new Web3(new Web3.providers.HttpProvider(rpc))
 const NEContractInstance=await new web3.eth.Contract(ABIJson,'0x6A70840B01299062C3fa2886eCD11aCBB42dccab')
@@ -89,6 +91,7 @@ export default function CourseDetail(){
         }
         setStep(step+1)
     }
+    setStep(step + 1);
   return (
     <div>
       <div className={"p-16 grid grid-cols-3 gap-4"}>

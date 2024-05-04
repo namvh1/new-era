@@ -54,18 +54,23 @@ export default function CourseDetail(){
         setStCourse(courseFinded)
     },[])
     const mint=async()=>{
-          const account=await window.coin98.provider
-              .request({ method: "eth_accounts" })
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts",});
         let tokenId=JSON.parse(localStorage.getItem('tokenID')|| 0)
+        let uri=`https://abc.xyz/collection/acount${tokenId}`
         tokenId++
+
         const metadata={
               image: 'https://i.guim.co.uk/img/media/b8a75934f827bdaf02a3814d1669c8da19886881/0_727_3500_2100/master/3500.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=1ad9e12c908d182c891b03abc19988f4',
             tokenId:tokenId,
             name: stCourse.name
         }
-          const mint = await NEContractInstance.methods.safeMint(account[0],tokenId,'').call();
-          const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || []
-        listMetadata.push(metadata)
+          const mint = await NEContractInstance.methods.safeMint(accounts[0],tokenId,uri).send({
+              from: '0xa0E28C2C3f1cD838F08BF3F055774A30C18AEf30'
+
+          });
+
+          const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || {}
+        listMetadata[uri]=metadata
           localStorage.setItem('listMetadata',JSON.stringify(listMetadata))
           console.log(mint)
     }

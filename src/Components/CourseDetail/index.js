@@ -59,6 +59,7 @@ const Step1 = (props) => {
 export default function CourseDetail() {
   const [step, setStep] = useState(1);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [isDisabled,setDisabled]=useState(false)
   let params = useParams();
   const [stCourse, setStCourse] = useState({});
   useEffect(() => {
@@ -103,6 +104,7 @@ export default function CourseDetail() {
     localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
     localStorage.setItem("tokenId", JSON.stringify(tokenId));
     localStorage.setItem("wallet", JSON.stringify(walletItem));
+    setDisabled(true)
 
   };
   const handleStep = () => {
@@ -177,7 +179,7 @@ export default function CourseDetail() {
               </div>
           )}
           <div className={"flex items-center justify-center mt-4"}>
-            <Button color={"primary"} onClick={handleStep}>
+            <Button color={"primary"} onClick={handleStep} isDisabled={isDisabled}>
               {step !== 3 ? "Next" : "Mint"}
             </Button>
           </div>
@@ -207,7 +209,7 @@ export default function CourseDetail() {
                 />
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={mint}>
+                <Button color="primary" onPress={mint} isDisabled={isDisabled}>
                   Mint
                 </Button>
               </ModalFooter>

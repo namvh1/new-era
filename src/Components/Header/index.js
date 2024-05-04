@@ -15,7 +15,7 @@ function Profile() {
           />
         </Link>
       </div>
-      <div className="flex gap-3">
+      <div className="flex items-center gap-8">
         <Link className="cursor-pointer" href="/">Home</Link>
         <Link className="cursor-pointer" href="/leaderboard">Leader Board</Link>
       </div>

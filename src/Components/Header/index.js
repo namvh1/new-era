@@ -1,7 +1,6 @@
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/react";
 import User from "./user";
-import { Link } from "@nextui-org/react";
 
 function Profile() {
   return (

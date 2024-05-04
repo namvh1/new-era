@@ -4,6 +4,7 @@ import Web3 from "web3";
 import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import { LOCAL_WALLET_KEY, RPC, TOKEN_CONTRACT } from "../../common/constans";
 import BuyToken from "./buyToken";
+import { formatNumberBro } from "../../common/function";
 
 function User() {
   const [wallet, setWallet] = useState({
@@ -76,7 +77,7 @@ function User() {
   return (
     <div>
       {wallet?.isConnected && (
-        <span className="mr-4">Balance: {balance} NE</span>
+        <span className="mr-4">Balance: {formatNumberBro(balance, 4)} NE</span>
       )}
       <Button onClick={handleConnectWallet} color="primary">
         {wallet?.isConnected ? "Disconnect" : "Connect"}

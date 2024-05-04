@@ -38,60 +38,73 @@ const steps = [
   },
 ];
 const rpc = "https://rpc.sepolia.org";
-const web3=new Web3(new Web3.providers.HttpProvider(rpc))
-const NEContractInstance=await new web3.eth.Contract(ABIJson,'0x6A70840B01299062C3fa2886eCD11aCBB42dccab')
-const Step1=(props)=>{
-    return <iframe className={'w-full h-[560px]'} src={props.video}
-                   title="YouTube video player" frameBorder="0"
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                   referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
-}
-export default function CourseDetail(){
-    const [step,setStep]=useState(1)
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    let params = useParams();
-    const [stCourse,setStCourse]=useState({})
-    useEffect(()=>{
-        const courseFinded= courses.find(item=>item.slug===params.slug)
-        setStCourse(courseFinded)
-    },[])
-    const mint=async()=>{
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts",});
-        let tokenId=JSON.parse(localStorage.getItem('tokenID')|| 0)
-        let uri=`https://abc.xyz/collection/${tokenId}`
-        tokenId++
+const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
+const NEContractInstance = await new web3.eth.Contract(
+  ABIJson,
+  "0x6A70840B01299062C3fa2886eCD11aCBB42dccab"
+);
+const Step1 = (props) => {
+  return (
+    <iframe
+      className={"w-full h-[560px]"}
+      src={props.video}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    ></iframe>
+  );
+};
+export default function CourseDetail() {
+  const [step, setStep] = useState(1);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  let params = useParams();
+  const [stCourse, setStCourse] = useState({});
+  useEffect(() => {
+    const courseFinded = courses.find((item) => item.slug === params.slug);
+    setStCourse(courseFinded);
+  }, []);
+  const mint = async () => {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    let tokenId = JSON.parse(localStorage.getItem("tokenID") || 0);
+    let uri = `https://abc.xyz/collection/${tokenId}`;
+    tokenId++;
 
-        const metadata={
-              image: 'https://i.guim.co.uk/img/media/b8a75934f827bdaf02a3814d1669c8da19886881/0_727_3500_2100/master/3500.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=1ad9e12c908d182c891b03abc19988f4',
-            tokenId:tokenId,
-            name: stCourse.name
-        }
-          const mint = await NEContractInstance.methods.safeMint(accounts[0],tokenId,uri).encodeABI()
-        await window.ethereum.request({
-            "method": "eth_sendTransaction",
-            "params": [
-                {
-                    type: 0,
-                    "to": '0x6A70840B01299062C3fa2886eCD11aCBB42dccab',
-                    "from": accounts[0],
-                    "data": mint,
-                }
-            ]
-        });
+    const metadata = {
+      image:
+        "https://i.guim.co.uk/img/media/b8a75934f827bdaf02a3814d1669c8da19886881/0_727_3500_2100/master/3500.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=1ad9e12c908d182c891b03abc19988f4",
+      tokenId: tokenId,
+      name: stCourse.name,
+    };
+    const mint = await NEContractInstance.methods
+      .safeMint(accounts[0], tokenId, uri)
+      .encodeABI();
+    await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [
+        {
+          type: 0,
+          to: "0x6A70840B01299062C3fa2886eCD11aCBB42dccab",
+          from: accounts[0],
+          data: mint,
+        },
+      ],
+    });
 
-
-
-          const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || {}
-        listMetadata[uri]=metadata
-          localStorage.setItem('listMetadata',JSON.stringify(listMetadata))
+    const listMetadata = JSON.parse(localStorage.getItem("listMetadata")) || {};
+    listMetadata[uri] = metadata;
+    localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
+  };
+  const handleStep = () => {
+    if (step === 3) {
+      onOpen();
+      return;
     }
-    const handleStep=()=>{
-        if(step===3){
-            onOpen()
-            return
-        }
-        setStep(step+1)
-    }
+    setStep(step + 1);
+  };
   return (
     <div>
       <div className={"p-16 grid grid-cols-3 gap-4"}>

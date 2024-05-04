@@ -52,24 +52,26 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
     web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
       .once("transactionHash", (hash) => {
+        const walletItem = localStorage.getItem("wallet") || {};
+        const parse = JSON.parse(
+          typeof walletItem === "string"
+            ? walletItem
+            : JSON.stringify(walletItem)
+        );
+
+        const newBalance = parse[wallet?.address].coin + amount;
+        parse[wallet?.address] = {
+          coin: parse[wallet?.address] ? newBalance : amount,
+        };
+        localStorage.setItem("wallet", JSON.stringify(parse));
+        setBalance(newBalance);
+
         window.open(`https://sepolia.etherscan.io/tx/${hash}`);
         onClose();
       })
       .catch((e) => {
         console.log(e);
       });
-
-    const walletItem = localStorage.getItem("wallet") || {};
-    const parse = JSON.parse(
-      typeof walletItem === "string" ? walletItem : JSON.stringify(walletItem)
-    );
-    parse[wallet?.address] = {
-      coin: parse[wallet?.address]
-        ? parse[wallet?.address].coin + amount
-        : amount,
-    };
-    localStorage.setItem("wallet", JSON.stringify(parse));
-    // setBalance(result);
   };
 
   return (

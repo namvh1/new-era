@@ -8,7 +8,6 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import Web3 from "web3";
-import { Transaction, signTransaction } from 'web3-eth-accounts'
 import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import {
   PK_WALLET,
@@ -18,55 +17,58 @@ import {
 } from "../../common/constans";
 
 function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
-  console.log(wallet)
   const buyToken = async () => {
     const amount = 1000;
-    // const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
-    //
-    // const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
-    //
-    // const data = await NEContractInstance.methods
-    //   .transfer(wallet?.address, web3.utils.toWei(amount, "ether"))
-    //   .encodeABI();
-    // console.log('data', data, wallet)
-    //
-    // const gasAmount = await web3.eth.estimateGas({
-    //   to: wallet?.address,
-    //   from: WALLET_ADDRESS,
-    //   data,
-    // });
-    //
-    // const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS, 'pending');
-    // const gasPrice = await web3.eth.getGasPrice();
-    // const signedTx = await web3.eth.accounts.signTransaction({
-    //     type: "0",
-    //     to: wallet?.address,
-    //     from: WALLET_ADDRESS,
-    //     nonce,
-    //     data,
-    //     // gasLimit: web3.utils.toHex(Number(gasAmount.toString()) * 3),
-    //     gasPrice,
-    //     gas: gasAmount,
-    //   },
-    //   PK_WALLET
-    // );
-    //   console.log('signedTx', signedTx)
-    // web3.eth
-    //   .sendSignedTransaction(signedTx.rawTransaction)
-    //   .once("transactionHash", (hash) => {
-    //     console.log(hash);
-    //     onClose();
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
-      const walletItem=localStorage.getItem('wallet') || {}
-      const parse=JSON.parse(typeof(walletItem) === 'string' ? walletItem : JSON.stringify(walletItem))
-      parse[wallet?.address]= {
-          coin: parse[wallet?.address]? parse[wallet?.address].coin + amount : amount
-      }
-      localStorage.setItem('wallet',JSON.stringify(parse))
+    const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
 
+    const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
+
+    const data = await NEContractInstance.methods
+      .transfer(wallet?.address, web3.utils.toWei(amount, "ether"))
+      .encodeABI();
+
+    const gasAmount = await web3.eth.estimateGas({
+      to: wallet?.address,
+      from: WALLET_ADDRESS,
+      data,
+    });
+
+    const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS, "pending");
+    const gasPrice = await web3.eth.getGasPrice();
+
+    const signedTx = await web3.eth.accounts.signTransaction(
+      {
+        type: "0",
+        to: wallet?.address,
+        from: WALLET_ADDRESS,
+        nonce,
+        data,
+        gasLimit: web3.utils.toHex(Number(gasAmount.toString()) * 1),
+        gasPrice,
+      },
+      PK_WALLET
+    );
+
+    web3.eth
+      .sendSignedTransaction(signedTx.rawTransaction)
+      .once("transactionHash", (hash) => {
+        window.open(`https://sepolia.etherscan.io/tx/${hash}`);
+        onClose();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    const walletItem = localStorage.getItem("wallet") || {};
+    const parse = JSON.parse(
+      typeof walletItem === "string" ? walletItem : JSON.stringify(walletItem)
+    );
+    parse[wallet?.address] = {
+      coin: parse[wallet?.address]
+        ? parse[wallet?.address].coin + amount
+        : amount,
+    };
+    localStorage.setItem("wallet", JSON.stringify(parse));
     // setBalance(result);
   };
 

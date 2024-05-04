@@ -11,16 +11,25 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <NextUIProvider>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/">
-            <Course />
-          </Route>
-          <Route path="/profile">
-            <Profile />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <div className="bg-gray-900 p-4">
+        <div>
+          {/*nav component*/}
+        </div>
+        <div>
+          <BrowserRouter>
+            <Switch>
+              <Route exact path="/">
+                <Course />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+            </Switch>
+          </BrowserRouter>
+        </div>
+
+      </div>
+
     </NextUIProvider>
   </React.StrictMode>
 );

@@ -59,7 +59,7 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
             : JSON.stringify(walletItem)
         );
 
-        const newBalance = parse[wallet?.address].coin + amount;
+        const newBalance = parse[wallet?.address]?.coin + amount;
         parse[wallet?.address] = {
           coin: parse[wallet?.address] ? newBalance : amount,
         };

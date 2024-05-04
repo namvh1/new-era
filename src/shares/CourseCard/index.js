@@ -11,6 +11,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 import Web3 from "web3";
 import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import { RPC, TOKEN_CONTRACT } from "../../common/constans";
@@ -18,6 +19,12 @@ import { RPC, TOKEN_CONTRACT } from "../../common/constans";
 export default function CourseCard(props) {
   const { item } = props;
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [courseBought, setCourseBought] = useState([]);
+
+  const courses = localStorage.getItem("courses") || {};
+  const coursesParse = JSON.parse(
+    typeof courses === "string" ? courses : JSON.stringify(courses)
+  );
 
   const buy = async () => {
     const accounts = await window.ethereum.request({
@@ -68,6 +75,8 @@ export default function CourseCard(props) {
             coursesParse[accounts[0]].push({
               courseId: item.slug,
             });
+
+            setCourseBought([...courseBought, item.slug]);
           }
         } else {
           coursesParse[accounts[0]] = [
@@ -80,6 +89,22 @@ export default function CourseCard(props) {
         localStorage.setItem("courses", JSON.stringify(coursesParse));
       });
   };
+
+  const handleClickBuy = () => {
+    if (courseBought?.includes(item?.slug)) {
+      window.location.href = `${window.location.hostname}/courses/${it?.slug}`;
+    } else {
+      onOpen();
+    }
+  };
+
+  useEffect(() => {
+    if (coursesParse[Object.keys(coursesParse)[0]]?.length) {
+      setCourseBought(
+        coursesParse[Object.keys(coursesParse)[0]]?.map((it) => it.courseId)
+      );
+    }
+  }, [coursesParse]);
 
   return (
     <Card isFooterBlurred className="w-full h-[200px] col-span-1">
@@ -102,9 +127,9 @@ export default function CourseCard(props) {
             color="primary"
             radius="full"
             size="sm"
-            onClick={onOpen}
+            onClick={handleClickBuy}
           >
-            Buy
+            {courseBought?.includes(item?.slug) ? "Learn" : "Buy"}
           </Button>
         )}
       </CardFooter>

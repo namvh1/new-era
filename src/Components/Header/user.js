@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import { LOCAL_WALLET_KEY, RPC, TOKEN_CONTRACT } from "../../common/constans";
-import BuyToken from "./buyToken";
 import { formatNumberBro } from "../../common/function";
+import BuyToken from "./buyToken";
 
 function User() {
   const [wallet, setWallet] = useState({
@@ -26,7 +26,13 @@ function User() {
     const balance = await NEContractInstance.methods.balanceOf(address).call();
     const result = Number(web3.utils.fromWei(balance, "ether"));
 
-    setBalance(result);
+    const walletItem = localStorage.getItem("wallet") || {};
+    const parse = JSON.parse(
+      typeof walletItem === "string" ? walletItem : JSON.stringify(walletItem)
+    );
+    const localeBalance = parse[address]?.coin;
+
+    setBalance(localeBalance > 0 ? localeBalance : result || 0);
   };
 
   const handleConnectWallet = () => {
@@ -72,7 +78,7 @@ function User() {
       setWallet(walletConnect);
       getBalance(walletConnect?.address);
     }
-  }, [walletConnect?.isConnected]);
+  }, [walletConnect?.isConnected, localStorage.getItem("courses")]);
 
   return (
     <div>

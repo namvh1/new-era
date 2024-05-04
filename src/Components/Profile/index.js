@@ -30,7 +30,7 @@ function Profile() {
     fetchAccount()
   },[])
   const fetchAccount=async()=>{
-    const account=await window.coin98.provider
+    const account=await window.ethereum
         .request({ method: "eth_accounts" })
     setAccount(account[0])
   }

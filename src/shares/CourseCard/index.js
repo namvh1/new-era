@@ -25,7 +25,7 @@ export default function CourseCard(props){
         getBalance()
     },[])
     const getBalance = async () => {
-        const account=await window.coin98.provider
+        const account=await window.ethereum
             .request({ method: "eth_accounts" })
         const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
         const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);

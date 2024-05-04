@@ -15,7 +15,8 @@ import Web3 from "web3";
 import {RPC, TOKEN_CONTRACT} from "../../common/constans";
 import {NEAbi} from "../../blockchain/abi/NewEraERC20";
 import {useEffect, useState} from "react";
-
+const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
+const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
 export default function CourseCard(props){
     const {item}=props
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -25,10 +26,9 @@ export default function CourseCard(props){
         getBalance()
     },[])
     const getBalance = async () => {
-        const account=await window.coin98.provider
+        const account=await window.ethereum
             .request({ method: "eth_accounts" })
-        const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
-        const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
+
 
     const balance = await NEContractInstance.methods
       .balanceOf(account[0])
@@ -37,6 +37,24 @@ export default function CourseCard(props){
 
     setBalance(result);
   };
+    const buy=async()=>{
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts",});
+
+        const data = await NEContractInstance.methods
+            .transfer(accounts[0], web3.utils.toWei(item.price, "ether"))
+            .encodeABI();
+        window.ethereum.request({
+            "method": "eth_sendTransaction",
+            "params": [
+                {
+                    "to": TOKEN_CONTRACT,
+                    "from": accounts[0],
+                    "data": data,
+                }
+            ]
+        });
+
+    }
   return (
     <Card isFooterBlurred className="w-full h-[200px] col-span-1">
       <CardHeader className="absolute z-10 top-1 flex-col items-start"></CardHeader>
@@ -76,7 +94,7 @@ export default function CourseCard(props){
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary" onPress={buy} disabled={balance<item.price}>
                   Buy
                 </Button>
               </ModalFooter>

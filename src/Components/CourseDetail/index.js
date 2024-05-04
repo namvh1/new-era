@@ -77,10 +77,10 @@ export default function CourseDetail(){
         });
 
 
+
           const listMetadata=JSON.parse(localStorage.getItem('listMetadata')) || {}
         listMetadata[uri]=metadata
           localStorage.setItem('listMetadata',JSON.stringify(listMetadata))
-          console.log(mint)
     }
     const handleStep=()=>{
         if(step===3){

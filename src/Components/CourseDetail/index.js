@@ -12,6 +12,8 @@ import {
 import {icon} from "../../icon";
 import {Button} from "@nextui-org/button";
 import {useState} from "react";
+import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
+import {Web3} from "web3";
 
 
 const steps=[
@@ -26,10 +28,20 @@ const steps=[
         desc: 'Mint NFT'
     }
 ]
+const rpc = "https://rpc.sepolia.org";
+const web3=new Web3(new Web3.providers.HttpProvider(rpc))
+const NEContractInstance=await new web3.eth.Contract(ABIJson,'0x6A70840B01299062C3fa2886eCD11aCBB42dccab')
 
 export default function CourseDetail(){
     const [step,setStep]=useState(1)
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const mint=async()=>{
+          const account=await window.coin98.provider
+              .request({ method: "eth_accounts" })
+
+          const balance = await NEContractInstance.methods.safeMint(account[0]).call();
+          console.log(balance)
+    }
     const handleStep=()=>{
         if(step===3){
             onOpen()
@@ -104,7 +116,7 @@ export default function CourseDetail(){
                         </ModalBody>
                         <ModalFooter>
 
-                            <Button color="primary" onPress={onClose}>
+                            <Button color="primary" onPress={mint}>
                                 Mint
                             </Button>
                         </ModalFooter>

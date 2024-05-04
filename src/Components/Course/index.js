@@ -1,7 +1,9 @@
 import { Button } from "@nextui-org/button";
 import { Avatar, Image, Progress } from "@nextui-org/react";
+import { Link } from "react-router-dom";
+import courses from "../../courses.json";
 import CourseCard from "../../shares/CourseCard";
-import courses from '../../courses.json'
+
 const CardsWrap = (props) => {
   return (
     <div className={"grid grid-cols-3 gap-2"}>
@@ -23,21 +25,21 @@ export default function Course() {
       <div className={"col-span-10"}>
         <b>Courses</b>
         <div className={"grid grid-cols-4 gap-4"}>
-          {courses
-            .map((item, key) => (
-              <div className={"col-span-1"}>
-                <CourseCard key={key} item={item}/>
-              </div>
-            ))}
+          {courses.map((item, key) => (
+            <div className={"col-span-1"}>
+              <CourseCard key={key} item={item} />
+            </div>
+          ))}
         </div>
       </div>
       <div className={"col-span-2 flex flex-col gap-2"}>
         <div className={"flex items-center justify-between"}>
-          <Avatar
-            src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-            className="w-20 h-20 text-large"
-          />
-          <Button color="primary">Button</Button>
+          <Link to="/profile">
+            <Avatar
+              src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+              className="w-20 h-20 text-large"
+            />
+          </Link>
         </div>
 
         <Progress aria-label="Loading..." value={60} className="max-w-md" />

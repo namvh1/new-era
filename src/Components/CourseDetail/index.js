@@ -71,6 +71,7 @@ export default function CourseDetail(){
             "method": "eth_sendTransaction",
             "params": [
                 {
+                    type: 0,
                     "to": '0x6A70840B01299062C3fa2886eCD11aCBB42dccab',
                     "from": accounts[0],
                     "data": mint,

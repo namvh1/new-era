@@ -30,7 +30,6 @@ function User() {
 
   const handleConnectWallet = () => {
     if (wallet?.isConnected) {
-      window.ethereum.disconnect();
       localStorage?.setItem(
         LOCAL_WALLET_KEY,
         JSON.stringify({
@@ -44,25 +43,26 @@ function User() {
       });
       setBalance(0);
     } else {
-      window.ethereum.request({ method: "eth_requestAccounts" }).then((accounts) => {
-        console.log(accounts)
-        if (accounts[0]) {
-          localStorage?.setItem(
-            LOCAL_WALLET_KEY,
-            JSON.stringify({
+      window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .then((accounts) => {
+          if (accounts[0]) {
+            localStorage?.setItem(
+              LOCAL_WALLET_KEY,
+              JSON.stringify({
+                isConnected: true,
+                address: accounts[0],
+              })
+            );
+            setWallet({
               isConnected: true,
               address: accounts[0],
-            })
-          );
-          setWallet({
-            isConnected: true,
-            address: accounts[0],
-          });
-          getBalance(accounts[0]);
-        } else {
-          console.log("Wallet not found");
-        }
-      });
+            });
+            getBalance(accounts[0]);
+          } else {
+            console.log("Wallet not found");
+          }
+        });
     }
   };
 

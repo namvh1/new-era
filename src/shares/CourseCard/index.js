@@ -104,7 +104,7 @@ export default function CourseCard(props) {
         coursesParse[Object.keys(coursesParse)[0]]?.map((it) => it.courseId)
       );
     }
-  }, [coursesParse]);
+  }, [coursesParse[Object.keys(coursesParse)[0]]?.length]);
 
   return (
     <Card isFooterBlurred className="w-full h-[200px] col-span-1">

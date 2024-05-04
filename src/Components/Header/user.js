@@ -44,7 +44,8 @@ function User() {
       });
       setBalance(0);
     } else {
-      window.ethereum.request({ method: "eth_accounts" }).then((accounts) => {
+      window.ethereum.request({ method: "eth_requestAccounts" }).then((accounts) => {
+        console.log(accounts)
         if (accounts[0]) {
           localStorage?.setItem(
             LOCAL_WALLET_KEY,

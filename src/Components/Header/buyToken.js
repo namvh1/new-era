@@ -8,7 +8,8 @@ import {
   ModalHeader,
 } from "@nextui-org/react";
 import Web3 from "web3";
-import { NEAbi } from "../../blockchain/abi/NewEraERC20";
+import { Transaction, signTransaction } from 'web3-eth-accounts'
+import NEAbi from "../../blockchain/abi/NewEraERC20.json";
 import {
   PK_WALLET,
   RPC,
@@ -27,6 +28,7 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
     const data = await NEContractInstance.methods
       .transfer(wallet?.address, web3.utils.toWei(amount, "ether"))
       .encodeABI();
+    console.log('data', data, wallet)
 
     const gasAmount = await web3.eth.estimateGas({
       to: wallet?.address,
@@ -34,19 +36,21 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
       data,
     });
 
+    const nonce = await web3.eth.getTransactionCount(WALLET_ADDRESS, 'pending');
     const gasPrice = await web3.eth.getGasPrice();
-    const signedTx = await web3.eth.accounts.signTransaction(
-      {
+    const signedTx = await web3.eth.accounts.signTransaction({
         type: "0",
         to: wallet?.address,
         from: WALLET_ADDRESS,
+        nonce,
         data,
-        gasLimit: web3.utils.toHex(Number(gasAmount.toString()) * 2),
+        // gasLimit: web3.utils.toHex(Number(gasAmount.toString()) * 3),
         gasPrice,
+        gas: gasAmount,
       },
       PK_WALLET
     );
-
+      console.log('signedTx', signedTx)
     web3.eth
       .sendSignedTransaction(signedTx.rawTransaction)
       .once("transactionHash", (hash) => {

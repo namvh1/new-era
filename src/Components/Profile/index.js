@@ -14,12 +14,10 @@ const colors = [
 const total=[
   {
     name: 'Courses',
-    value: 0,
     icon: <Image src={'https://cdn-icons-png.flaticon.com/512/4762/4762311.png'} width={50}/>
   },
   {
     name: 'Points',
-    value: 0,
     icon: <Image src={'https://png.pngtree.com/element_our/20200702/ourmid/pngtree-cartoon-gold-coin-vector-download-image_2286360.jpg'} width={50}/>
 
   }
@@ -27,6 +25,7 @@ const total=[
 function Profile() {
   const [account,setAccount]=useState('')
   const [stCourses,setStCourses]=useState([])
+  const [stTotal,setTotal]=useState([])
   useEffect(()=>{
     fetchAccount()
   },[])
@@ -34,15 +33,22 @@ function Profile() {
     const account=await window.ethereum.request({ method: "eth_accounts" })
     const coursesItem=JSON.parse(localStorage.getItem('courses') || JSON.stringify({}))
     let list=[]
+    let total=[]
+    let point=0
     coursesItem[account[0]].forEach(itemm=>{
-      if(courses.find(item=>item.slug===itemm.courseId )){
-        list.push(courses.find(item=>item.slug===itemm.courseId ))
+      const courseFinded=courses.find(item=>item.slug===itemm.courseId )
+      if(courseFinded){
+        point+=courseFinded.point
+        list.push(courseFinded)
       }
     })
+    total.push(coursesItem[account[0]]?coursesItem[account[0]].length : 0 )
+    total.push(point)
+    setTotal(total)
     setStCourses(list)
     setAccount(account[0])
   }
-  return <div className={'grid grid-cols-3 gap-4 text-black'}>
+  return <div className={'grid grid-cols-3 gap-4 text-black mt-8'}>
     <div className={'col-span-1 flex flex-col gap-2'}>
       <div className={'flex items-center justify-between'}>
         <Avatar src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e2b28077-02b5-4e0f-8303-37e2672ea874/d5a1hdb-d15d5151-5a7b-4407-9eaa-99aa77863802.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2UyYjI4MDc3LTAyYjUtNGUwZi04MzAzLTM3ZTI2NzJlYTg3NFwvZDVhMWhkYi1kMTVkNTE1MS01YTdiLTQ0MDctOWVhYS05OWFhNzc4NjM4MDIucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.ITLY1myWdL4iAy1wu4qYRLCGPOEbVs4rxrlXt5uR3zg" className="w-20 h-20 text-large" />
@@ -65,7 +71,7 @@ function Profile() {
                 {item.name}
               </div>
               <div>
-                <b>{item.value}</b>
+                <b>{stTotal[key]}</b>
               </div>
             </div>
           </div>)

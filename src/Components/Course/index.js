@@ -21,7 +21,7 @@ function Course() {
   return <div className={'grid grid-cols-12 gap-4 p-16'}>
     <div className={'col-span-10'}>
       <b>Courses</b>
-      <div className={'grid grid-cols-3 gap-8'}>
+      <div className={'grid grid-cols-4 gap-4'}>
         {
           [0,1,2,3,4,5,67,8,9,10].map((item,key)=><div className={'col-span-1'}><CourseCard key={key}/></div>)
         }

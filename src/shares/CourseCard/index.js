@@ -2,7 +2,7 @@ import {Card, CardFooter, CardHeader, Image} from "@nextui-org/react";
 import {Button} from "@nextui-org/button";
 
 export default function CourseCard(){
-    return <Card  isFooterBlurred className="w-full h-[300px] col-span-1">
+    return <Card  isFooterBlurred className="w-full h-[200px] col-span-1">
         <CardHeader className="absolute z-10 top-1 flex-col items-start">
             <Image
                 src="https://i.pinimg.com/originals/dd/aa/45/ddaa452e0a3acaf6c79f6aa2fd69cebe.png"

@@ -57,7 +57,8 @@ export default function CourseCard(props){
         const walletItem=localStorage.getItem('wallet') || {}
         const parse=JSON.parse(typeof(walletItem) === 'string' ? walletItem : JSON.stringify(walletItem))
         parse[accounts[0]]= {
-            coin: parse[accounts[0]]? parse[accounts[0]].coin - item.price : item.price
+            coin: parse[accounts[0]]? parse[accounts[0]].coin - item.price : item.price,
+            nfts: []
         }
         localStorage.setItem('wallet',JSON.stringify(parse))
 

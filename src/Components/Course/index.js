@@ -59,7 +59,7 @@ export default function Course() {
         </div>
 
         <Progress aria-label="Loading..." value={60} className="max-w-md" />
-        <b>{account}</b>
+        <b>Student</b>
       </div>
     </div>
   );

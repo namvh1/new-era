@@ -26,17 +26,25 @@ function Profile() {
   const [account,setAccount]=useState('')
   const [stCourses,setStCourses]=useState([])
   const [stTotal,setTotal]=useState([])
+  const [nfts,setNfts]=useState([])
   useEffect(()=>{
     fetchAccount()
   },[])
   const fetchAccount=async()=>{
     const account=await window.ethereum.request({ method: "eth_accounts" })
     const coursesItem=JSON.parse(localStorage.getItem('courses') || JSON.stringify({}))
+    const walletItem=localStorage.getItem('wallet') || {}
+    const parse=JSON.parse(typeof(walletItem) === 'string' ? walletItem : JSON.stringify(walletItem))
+    const nfts=parse[account[0]].nfts.map(item=>{
+      const listMetadata=JSON.parse(localStorage.getItem('listMetadata') || JSON.stringify({}))
+      return listMetadata[`https://abc.xyz/collection/${item}`]
+    })
     let list=[]
     let total=[]
     let point=0
     coursesItem[account[0]].forEach(itemm=>{
       const courseFinded=courses.find(item=>item.slug===itemm.courseId )
+      courseFinded.isDone=!!nfts.find(item=>item.name===courseFinded.slug)
       if(courseFinded){
         point+=courseFinded.point
         list.push(courseFinded)
@@ -44,10 +52,14 @@ function Profile() {
     })
     total.push(coursesItem[account[0]]?coursesItem[account[0]].length : 0 )
     total.push(point)
+
+
+    setNfts(nfts)
     setTotal(total)
     setStCourses(list)
     setAccount(account[0])
   }
+  console.log(stCourses)
   return <div className={'grid grid-cols-3 gap-4 text-black mt-8'}>
     <div className={'col-span-1 flex flex-col gap-2'}>
       <div className={'flex items-center justify-between'}>
@@ -90,12 +102,12 @@ function Profile() {
       </b>
       <div className={'grid grid-cols-4 gap-2'}>
         {
-          [0,1,2,3,4,5,5,6,7,8,9].map((item,key)=><div key={key} className={'bg-cyan-50 rounded col-span-1 flex items-center justify-center p-4'}>
+          nfts.map((item,key)=><div key={key} className={'bg-cyan-50 rounded col-span-1 flex items-center justify-center p-4'}>
             <Image
                 isBlurred
                 // width={50}
                 // height={50}
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToTpVIRcQZU6KyGz04JH4JSncjkn4jRN5CXeRbNRzJhmf4X26eGqs0xtuxQ0OjsH3J9_c&usqp=CAU"
+                src={item.image}
                 alt="NextUI Album Cover"
                 className="rounded-full w-[50px] h-[50px]"
             />
@@ -105,16 +117,16 @@ function Profile() {
       </div>
     </div>
     <div className={'col-span-2'}>
-      <Tabs  color={'primary'} aria-label="Tabs colors" radius="full">
-        <Tab key="photos" title="My Courses"/>
-        <Tab key="music" title="Completed"/>
-      </Tabs>
+      {/*<Tabs  color={'primary'} aria-label="Tabs colors" radius="full">*/}
+      {/*  <Tab key="photos" title="My Courses" />*/}
+      {/*  <Tab key="music" title="Completed"/>*/}
+      {/*</Tabs>*/}
       <div className={'grid grid-cols-3 gap-4 mt-4 text-white'}>
         {stCourses
             .map((item, key) => (
                 <div className={"col-span-1"}>
                   <Link href={`/courses/${item.slug}`}>
-                    <CourseCard key={key} item={item} isBuyed={true}/>
+                    <CourseCard key={key} item={item} isBuyed={true} isDone={item.isDone}/>
 
                   </Link>
                 </div>

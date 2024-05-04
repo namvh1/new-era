@@ -69,9 +69,10 @@ export default function CourseDetail() {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    let tokenId = JSON.parse(localStorage.getItem("tokenID") || 0);
-    let uri = `https://abc.xyz/collection/${tokenId}`;
+    let tokenId = JSON.parse(localStorage.getItem("tokenId") || 0);
     tokenId++;
+
+    let uri = `https://abc.xyz/collection/${tokenId}`;
 
     const metadata = {
       image:
@@ -96,7 +97,13 @@ export default function CourseDetail() {
 
     const listMetadata = JSON.parse(localStorage.getItem("listMetadata")) || {};
     listMetadata[uri] = metadata;
+
+    const walletItem=JSON.parse(localStorage.getItem('wallet') || JSON.stringify({}))
+    walletItem[accounts[0]]={...walletItem[accounts[0]],nfts: [...walletItem[accounts[0]].nfts, tokenId]  }
     localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
+    localStorage.setItem("tokenId", JSON.stringify(tokenId));
+    localStorage.setItem("wallet", JSON.stringify(walletItem));
+
   };
   const handleStep = () => {
     if (step === 3) {
@@ -158,13 +165,16 @@ export default function CourseDetail() {
           )}
           {step === 2 && <div>1+1=2</div>}
           {step === 3 && (
-            <div className={"flex items-center justify-center"}>
+              <div>
+                <h1 className={'text-2xl text-center'}>Congratulations</h1>
+            <div className={"flex items-center justify-center mt-4"}>
               <Image
                 width={400}
                 alt="NextUI hero Image"
                 src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTEwL2ZyZWVpbWFnZXNjb21wYW55X3Bob3RvX29mX2FfZ29sZF9jb2luc19pbnNpZGVfYV90cmVhc3VyZV9jaGVzdF9iMzNmYmMzYS0zZWZkLTRjZmEtOGEyMi0yOWFjZDkyMDFlMmFfMS5wbmc.png"
               />
             </div>
+              </div>
           )}
           <div className={"flex items-center justify-center mt-4"}>
             <Button color={"primary"} onClick={handleStep}>

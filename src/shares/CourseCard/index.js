@@ -60,6 +60,7 @@ export default function CourseCard(props) {
           coin: parse[accounts[0]]
             ? parse[accounts[0]].coin - item.price
             : item.price,
+          nfts: []
         };
         localStorage.setItem("wallet", JSON.stringify(parse));
 

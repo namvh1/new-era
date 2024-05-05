@@ -92,7 +92,7 @@ export default function CourseCard(props) {
 
   const handleClickBuy = () => {
     if (courseBought?.includes(item?.slug)) {
-      window.location.href = `${window.location.hostname}/courses/${it?.slug}`;
+      window.location.href = `${window.location.origin}/courses/${item?.slug}`;
     } else {
       onOpen();
     }

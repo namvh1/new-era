@@ -51,7 +51,7 @@ const Step1 = (props) => {
 };
 export default function CourseDetail() {
   const [step, setStep] = useState(1);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
   const [isDisabled,setDisabled]=useState(false)
   let params = useParams();
   const [stCourse, setStCourse] = useState({});
@@ -105,6 +105,7 @@ export default function CourseDetail() {
         localStorage.setItem("tokenId", JSON.stringify(tokenId));
         localStorage.setItem("wallet", JSON.stringify(walletItem));
         setDisabled(true)
+        onClose()
 
       });
   };

@@ -67,7 +67,7 @@ function Profile() {
     let list = [];
     let total = [];
     let point = 0;
-    coursesItem[account[0]].forEach((itemm) => {
+    (coursesItem[account[0]] || [])?.forEach((itemm) => {
       const courseFinded = courses.find((item) => item.slug === itemm.courseId);
       courseFinded.isDone = !!nfts.find(
         (item) => item.name === courseFinded.slug

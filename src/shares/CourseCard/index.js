@@ -12,13 +12,13 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import Web3 from "web3";
+import Web3 from "web3-old";
 import NEAbi from "../../blockchain/abi/NewEraERC20.json";
-import { RPC, TOKEN_CONTRACT } from "../../common/constans";
+import { RPC, TOKEN_CONTRACT, WALLET_ADDRESS } from "../../common/constans";
 
 export default function CourseCard(props) {
   const { item } = props;
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [courseBought, setCourseBought] = useState([]);
 
   const courses = localStorage.getItem("courses") || {};
@@ -31,11 +31,11 @@ export default function CourseCard(props) {
       method: "eth_requestAccounts",
     });
 
-    const web3 = await new Web3(new Web3.providers.HttpProvider(RPC));
+    const web3 = await new Web3(RPC);
     const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
 
     const data = await NEContractInstance.methods
-      .transfer(accounts[0], web3.utils.toWei(item.price, "ether"))
+      .transfer(WALLET_ADDRESS, web3.utils.toWei(String(item.price || 0)))
       .encodeABI();
 
     window.ethereum
@@ -49,7 +49,9 @@ export default function CourseCard(props) {
           },
         ],
       })
-      .then(() => {
+      .then((res) => {
+        window.open(`https://sepolia.etherscan.io/tx/${res}`);
+
         const walletItem = localStorage.getItem("wallet") || {};
         const parse = JSON.parse(
           typeof walletItem === "string"
@@ -60,7 +62,7 @@ export default function CourseCard(props) {
           coin: parse[accounts[0]]
             ? parse[accounts[0]].coin - item.price
             : item.price,
-          nfts: []
+          nfts: [],
         };
         localStorage.setItem("wallet", JSON.stringify(parse));
 
@@ -88,6 +90,7 @@ export default function CourseCard(props) {
         }
 
         localStorage.setItem("courses", JSON.stringify(coursesParse));
+        onClose();
       });
   };
 

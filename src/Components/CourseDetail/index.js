@@ -28,7 +28,7 @@ const steps = [
   },
   {
     step: 3,
-    desc: "Mint NFT",
+    desc: "Certificate",
   },
 ];
 const rpc = "https://rpc.sepolia.org";
@@ -51,8 +51,8 @@ const Step1 = (props) => {
 };
 export default function CourseDetail() {
   const [step, setStep] = useState(1);
-  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
-  const [isDisabled,setDisabled]=useState(false)
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [isDisabled, setDisabled] = useState(false);
   let params = useParams();
   const [stCourse, setStCourse] = useState({});
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function CourseDetail() {
           },
         ],
       })
-      .then(() => {
+      .then((res) => {
         const listMetadata =
           JSON.parse(localStorage.getItem("listMetadata")) || {};
         listMetadata[uri] = metadata;
@@ -104,9 +104,10 @@ export default function CourseDetail() {
         localStorage.setItem("listMetadata", JSON.stringify(listMetadata));
         localStorage.setItem("tokenId", JSON.stringify(tokenId));
         localStorage.setItem("wallet", JSON.stringify(walletItem));
-        setDisabled(true)
-        onClose()
+        setDisabled(true);
 
+        window.open(`https://sepolia.etherscan.io/tx/${res}`);
+        onClose();
       });
   };
   const handleStep = () => {
@@ -171,7 +172,7 @@ export default function CourseDetail() {
             <RadioGroup label="Select your favorite token">
               <Radio value="btc">BTC</Radio>
               <Radio value="eth">ETH</Radio>
-              <Radio value="nera">NEra</Radio>
+              <Radio value="nera">NERA</Radio>
               <Radio value="all">All</Radio>
             </RadioGroup>
           )}
@@ -188,8 +189,12 @@ export default function CourseDetail() {
             </div>
           )}
           <div className={"flex items-center justify-center mt-4"}>
-            <Button color={"primary"} onClick={handleStep} isDisabled={isDisabled}>
-              {step !== 3 ? "Next" : "Mint"}
+            <Button
+              color={"primary"}
+              onClick={handleStep}
+              isDisabled={isDisabled}
+            >
+              {step !== 3 ? "Next" : "Claim"}
             </Button>
           </div>
         </div>
@@ -219,7 +224,7 @@ export default function CourseDetail() {
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onPress={mint} isDisabled={isDisabled}>
-                  Mint
+                  Claim
                 </Button>
               </ModalFooter>
             </>

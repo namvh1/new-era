@@ -16,7 +16,14 @@ import {
   WALLET_ADDRESS,
 } from "../../common/constans";
 
-function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
+function BuyToken({
+  wallet,
+  setBalance,
+  onClose,
+  isOpen,
+  onOpenChange,
+  balance = 0,
+}) {
   const buyToken = async () => {
     const amount = 1000;
     const web3 = new Web3(RPC);
@@ -26,13 +33,14 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
     const data = NEContractInstance.methods
       .transfer(wallet?.address, web3.utils.toWei(String(amount || 0)))
       .encodeABI();
+
     const rawTx = {
       to: TOKEN_CONTRACT,
-      from: wallet?.address,
+      from: WALLET_ADDRESS,
       data,
     };
 
-    const gas = await web3.eth.estimateGas(rawTx)
+    const gas = await web3.eth.estimateGas(rawTx);
     const [nonce, gasPrice, networkId] = await Promise.all([
       web3.eth.getTransactionCount(account.address),
       web3.eth.getGasPrice(),
@@ -44,10 +52,14 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
     rawTx.chainId = networkId;
     rawTx.gas = gas;
 
-    // const signedTx = await web3.eth.signTransaction(rawTx);
-    const signedTransaction = await account.signTransaction(rawTx)
-    const receipt = await web3.eth.sendSignedTransaction(signedTransaction.rawTransaction) ;
-    console.log('🚀 ~ buyToken ~ receipt:', receipt);
+    const signedTransaction = await account.signTransaction(rawTx);
+    const receipt = await web3.eth
+      .sendSignedTransaction(signedTransaction.rawTransaction)
+      .then((res) => {
+        setBalance(balance + amount);
+        onClose();
+        window.open(`https://sepolia.etherscan.io/tx/${res?.transactionHash}`);
+      });
   };
 
   return (
@@ -56,12 +68,12 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
         {(onClose) => (
           <>
             <ModalHeader className="flex flex-col gap-1">
-              Buy NEra Token
+              Buy NERA Token
             </ModalHeader>
             <ModalBody>
               <div className="flex flex-col items-center">
                 <Image src="assets/swapToken.png" width={300} />
-                <p className="mt-4">You will recive 1000 NEra</p>
+                <p className="mt-4">You will recive 1000 NERA</p>
               </div>
             </ModalBody>
             <ModalFooter>

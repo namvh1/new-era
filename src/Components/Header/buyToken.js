@@ -73,7 +73,7 @@ function BuyToken({
             <ModalBody>
               <div className="flex flex-col items-center">
                 <Image src="assets/swapToken.png" width={300} />
-                <p className="mt-4">You will recive 1000 NERA</p>
+                <p className="mt-4">You will receive 1000 NERA</p>
               </div>
             </ModalBody>
             <ModalFooter>

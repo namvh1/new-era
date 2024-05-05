@@ -26,7 +26,7 @@ const RowRanking = ({ rank, point }) => {
 export default function LeaderBoard() {
   return (
     <div className={"text-black flex flex-col gap-2 p-16"}>
-      <b>Leader Board</b>
+      <b>Leaderboard</b>
       <p>Compete with friends to top the charts</p>
       <Tabs color={"primary"} aria-label="Tabs colors" radius="full">
         <Tab key="photos" title="All time" />

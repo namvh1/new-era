@@ -24,7 +24,7 @@ function BuyToken({ wallet, setBalance, onClose, isOpen, onOpenChange }) {
     const NEContractInstance = new web3.eth.Contract(NEAbi, TOKEN_CONTRACT);
     const account = web3.eth.accounts.privateKeyToAccount(PK_WALLET);
     const data = NEContractInstance.methods
-      .transfer(wallet?.address, web3.utils.toBN("10000000000"))
+      .transfer(wallet?.address, web3.utils.toWei(String(amount || 0)))
       .encodeABI();
     const rawTx = {
       to: TOKEN_CONTRACT,

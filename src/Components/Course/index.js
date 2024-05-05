@@ -29,13 +29,13 @@ export default function Course() {
       localStorage.getItem("courses") || JSON.stringify({})
     );
     let list = [];
-    coursesItem[account[0]].forEach((itemm) => {
+    coursesItem[account?.[0]]?.forEach((itemm) => {
       if (courses.find((item) => item.slug === itemm.courseId)) {
         list.push(courses.find((item) => item.slug === itemm.courseId));
       }
     });
     setStCourses(list);
-    setAccount(account[0]);
+    setAccount(account?.[0]);
   };
 
   useEffect(() => {

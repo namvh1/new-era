@@ -15,10 +15,13 @@ import {
 } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Web3 } from "web3";
+import Web3 from "web3-old";
 import ABIJson from "../../blockchain/abi/NewEraCertificate.json";
+import { RPC } from "../../common/constans";
 import courses from "../../courses.json";
 import { icon } from "../../icon";
+
+const CONTRACT_ADDRESS = "0x6A70840B01299062C3fa2886eCD11aCBB42dccab";
 
 const steps = [
   { step: 1, desc: "Courses" },
@@ -31,12 +34,7 @@ const steps = [
     desc: "Certificate",
   },
 ];
-const rpc = "https://rpc.sepolia.org";
-const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
-const NEContractInstance = await new web3.eth.Contract(
-  ABIJson,
-  "0x6A70840B01299062C3fa2886eCD11aCBB42dccab"
-);
+
 const Step1 = (props) => {
   return (
     <iframe
@@ -63,6 +61,13 @@ export default function CourseDetail() {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
+
+    const web3 = new Web3(RPC);
+    const NEContractInstance = await new web3.eth.Contract(
+      ABIJson,
+      CONTRACT_ADDRESS
+    );
+
     let tokenId = JSON.parse(localStorage.getItem("tokenId") || 0);
     tokenId++;
 
@@ -77,13 +82,13 @@ export default function CourseDetail() {
     const mint = await NEContractInstance.methods
       .safeMint(accounts[0], tokenId, uri)
       .encodeABI();
+
     await window.ethereum
       .request({
         method: "eth_sendTransaction",
         params: [
           {
-            type: 0,
-            to: "0x6A70840B01299062C3fa2886eCD11aCBB42dccab",
+            to: CONTRACT_ADDRESS,
             from: accounts[0],
             data: mint,
           },
